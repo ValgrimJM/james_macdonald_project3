@@ -1,18 +1,19 @@
 
-const animal = {};
+const paleo = {};
 // *************Array of Time Periods *****************
-const time_periods = [
+paleo.time_periods = [
+    {},
     {
         name: "Cambrian",
         abr: "Cm",
         id: 22,
-        animals: 1330
+        animals: 186, 
     }, 
     {
         name: "Devonian",
         abr: "D",
         id: 19,
-        animals: 526
+        animals: 133
     }, 
     // only chordata
     {
@@ -66,80 +67,98 @@ const time_periods = [
 ];
 
 // *************Array of Search Terms *****************
-const base_names =["Chordata,Arthropoda", "Chordata,Arthropoda", "Chordata", "Tetrapoda", "Tetrapoda", "Tetrapoda", "Tetrapoda", "Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea", "Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea","Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea,Carnivora"]
+paleo.base_names =["","Chordata,Radiodonta,Asaphida", "Chordata,Radiodonta,Asaphida", "Chordata", "Tetrapoda", "Tetrapoda", "Tetrapoda", "Tetrapoda", "Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea", "Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea","Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea,Carnivora"]
 
-let newWidth = $(".accordion").width() - 250;
-let activePanel = $(".accordion li.panel:first");
+paleo.new_width = $(".accordion").width() - 275;
+paleo.activePanel = $(".accordion li.panel:first");
 
-animal.init = () => {
-    $(activePanel).addClass('active');
-    activePanel.focus();
-    console.log('Getting Animal Data');
-    for (let i = 0; i < time_periods.length; i++) {
-        
-        
+// initialization
+paleo.init = () => {
+    paleo.panel_click();
+    paleo.panel_key_nav();
+    paleo.window_resize();
+    $(paleo.activePanel).addClass('active');
+    paleo.activePanel.focus();
+}
+paleo.animal_panel = (panel) =>{
+    const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
+    if (panel_val > 0) {
+        $(`.${panel} .panel-content`).empty();
+        for(let i = 0; i < 4; i++){
+            paleo.get_animals(panel_val, i);
+        }
+    }
+    
+}
+// get animal to display
+paleo.get_animals = (panel_id, num) => {
+    
+        let $loading_div = $("<div>").addClass(`loading-${num}`);
+        let $loading_img = $("<img>").attr("src", "assets/Wedges-3s-200px.svg");
+        let $loading_dots = $("<h3>").append($("<img>").attr("src","assets/Ellipsis-1s-50px.svg"));
+        $loading_div.append($loading_img, $loading_dots);
+        $(`.panel-${panel_id} .panel-content`).append($loading_div);
         $.ajax({
             url: "http://paleobiodb.org/data1.2/occs/taxa.json",
             format: "GET",
             dataType: "json",
             data: {
-                interval_id: time_periods[i].id,
-                base_name: base_names[i],
+                interval_id: paleo.time_periods[panel_id].id,
+                base_name: paleo.base_names[panel_id],
                 rank: "genus",
                 show: "img",
                 limit: 1,
-                offset: Math.floor(Math.random() * time_periods[i].animals)
+                offset: Math.floor(Math.random() * paleo.time_periods[panel_id].animals)
             }
-        }).then((res) =>{
-            console.log(time_periods[i].name, res);
-            let img_id = res.records[0].img.substring(res.records[0].img.lastIndexOf(":")+1);
-            console.log(img_id);
-            $(`.panel-${i + 1} img`).attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
-            $(`.panel-${i + 1} h3`).append(res.records[0].nam);
-            
-            // $(`.panel-${i + 1} panel-content`).append($img, $animal_name);
+        }).then((res) => {
+            $(`.panel-${panel_id} .panel-content .loading-${num}`).remove();
+            let img_id = res.records[0].img.substring(res.records[0].img.lastIndexOf(":") + 1);
+            let $animal_block = $("<div>").addClass("animal-block");
+            let $animal_img = $("<img>").attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
+            let $animal_name = $("<h3>").append(res.records[0].nam);
+            $animal_block.append($animal_img, $animal_name);
+            $(`.panel-${panel_id} .panel-content`).append($animal_block);
         });
-    }
 }
-
-$(document).keydown(function(e){
-    if (e.keyCode == 39 && activePanel[0].attributes.class != `class="panel panel-10 active"`){
-        console.log(activePanel[0].attributes.class);
-        
-        resize(activePanel.next());
-    }
-    if (e.keyCode == 37 && activePanel[0].attributes.class.nodeValue != "panel panel-0 active") {
-        console.log(activePanel[0].attributes.class.nodeValue);
-        console.log(`class="panel panel-0 active"`);
-        
-        resize(activePanel.prev());
-    }
-})
-$(".accordion").on('click', '.panel', function () {
-    if (!$(this).is('.active')) {
-        resize(this);
-    };
-});
-const resize = (next_item) =>{
-    $(activePanel).animate({ width: "25px" }, 300);
-    $(next_item).animate({ width: newWidth }, 300);
+// key press event handler
+paleo.panel_key_nav = function(){
+    $(document).keydown(function (e) {
+        if (e.keyCode == 39 && paleo.activePanel[0].classList[1] != "panel-10") {
+            paleo.move_panel(paleo.activePanel.next());
+        }
+        if (e.keyCode == 37 && paleo.activePanel[0].classList[1] != "panel-0") {
+            paleo.move_panel(paleo.activePanel.prev());
+        }
+    })
+}
+// click event handler for panel
+paleo.panel_click = function(){
+    $(".accordion").on('click', '.panel', function () {
+        if (!$(this).is('.active')) {
+            paleo.move_panel(this);
+        };
+    });
+}
+// method that changes panels
+paleo.move_panel = (next_item) => {
+    $(paleo.activePanel).animate({ width: "25px" }, 300);
+    $(next_item).animate({ width: paleo.new_width }, 300);
     $('.accordion .panel').removeClass('active');
     $(next_item).addClass('active');
-    activePanel = $(".accordion li.panel.active");
-    activePanel.focus();
-    console.log(activePanel);
-    
+    paleo.activePanel = $(".accordion li.panel.active");
+    paleo.activePanel.focus();
+    paleo.animal_panel(paleo.activePanel[0].classList[1]);
 }
 //when the window is resized
-$(window).on("resize", function () {
-    // update all variables that you need
-    newWidth = $(".accordion").width() - 250;
-    $(".panel.active").animate({ width: newWidth }, 1);
+paleo.window_resize = () => {
+    $(window).on("resize", function () {
+        // update all variables that you need
+        paleo.new_width = $(".accordion").width() - 250;
+        $(".panel.active").animate({ width: paleo.new_width }, 1);
+    });
+}
 
-});
 // **********On page load**********
-$(function () {
-    console.log(activePanel);
-    
-    animal.init();
+$(function () {  
+    paleo.init();
 });

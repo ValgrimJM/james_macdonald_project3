@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>James MacDonald Project 3 - jQuery Web Application</title>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="/resources/demos/style.css">
 </head>
 <body>
-
     <ul id="" class="accordion">
         <li class="panel panel-0">
             <div class="title-block"></div>
@@ -88,54 +85,21 @@
             </div>
         </li>
     </ul>
-    <!-- <ul>
-        <li class="animal1">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal2">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal3">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal4">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal5">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal6">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal7">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal8">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal9">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-        <li class="animal10">
-            <img src="" alt="">
-            <h3></h3>
-        </li>
-    </ul> -->
-
     <style>
         * { 
             -moz-box-sizing: border-box; 
             -webkit-box-sizing: border-box; 
             box-sizing: border-box; 
+        }
+        .panel-content h3 img{
+            width: 50px;
+            height: 50px;
+        }
+        .panel.panel.active{
+            height:100%;
+        }
+        .panel.active .panel-content{
+            height: 100%;
         }
         body{
             margin: 0;
@@ -148,49 +112,41 @@
 	list-style:none;
 	margin:30px 0;
 	padding:0;
-	height:270px;
+	height: auto;
 	width:100%;
 	margin:0 0 0 0px;
-	border-top:2px solid #000000;
-	border-bottom:2px solid #000000;
 	overflow:hidden;
+    display:flex
 }
 .accordion .panel {
-	float:left;
-	display:block;
+	display:flex;
 	height:270px;
 	width:25px;
 	overflow:hidden;
 	color:#666666;
 	text-decoration:none;
 	font-size:16px;
-	line-height:1.5em
+	line-height:1.5em;
 }
 .accordion .panel.active {
-	width:calc(100% - 250px)
+	width:calc(100% - 250px);
 }
 .panel-content {
-	padding:15px 15px 15px 55px;
+	padding:15px;
 	height:240px;
 	width:100%;
 }
 .title-block {
-	width:24px;
+	flex: 0 0 25px;
 	height:270px;
-	float:left;
-	background-color:#f980a1;
-	border-right:1px solid #ffffff;
-	cursor:pointer
-}
-.title-block:focus{
-    background-color: red;
+	background-color:#446799;
+	cursor:pointer;
 }
 .last {
-	border:none
+	border:none;
 }
     </style>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/index.js"></script>
 </body>
 </html>
