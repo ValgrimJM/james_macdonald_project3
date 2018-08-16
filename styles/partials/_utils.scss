@@ -1,0 +1,109 @@
+%panel-0{
+    background-color:  #2D3689;
+    &:hover{
+        background-color: darken(#2D3689, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#2D3689, 30);
+    }
+}
+%panel-1{
+    background-color: #446799;
+    &:hover{
+        background-color: darken(#446799, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#446799, 30);
+    }
+}
+%panel-2{
+    background-color: #5099B2;
+    &:hover{
+        background-color: darken(#5099B2, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#5099B2, 30);
+    }
+}
+%panel-3{
+    background-color: #6AD8BB;
+    &:hover{
+        background-color: darken(#6AD8BB, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#6AD8BB, 30);
+    }
+}
+%panel-4{
+    background-color: #39D68A;
+    &:hover{
+        background-color: darken(#39D68A, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#39D68A, 30);
+    }
+}
+%panel-5{
+    background-color: #53D15C;
+    &:hover{
+        background-color: darken(#53D15C, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#53D15C, 30);
+    }
+}
+%panel-6{
+    background-color: #33C636;
+    &:hover{
+        background-color: darken(#33C636, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#33C636, 30);
+    }
+}
+%panel-7{
+    background-color: #80D134;
+    &:hover{
+        background-color: darken(#80D134, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#80D134, 30);
+    }
+}
+%panel-8{
+    background-color: #92D836;
+    &:hover{
+        background-color: darken(#92D836, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#92D836, 30);
+    }
+}
+%panel-9{
+    background-color: #D3D134;
+    &:hover{
+        background-color: darken(#D3D134, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#D3D134, 30);
+    }
+}
+%panel-10{
+    background-color: #D3AD30;
+    &:hover{
+        background-color: darken(#D3AD30, 20);
+    }
+    & + .panel-content{
+        background-color: lighten(#D3AD30, 30);
+    }
+}
+@mixin panel-color($num){
+    @extend %panel-#{$num};
+}
+@for $panel-num from 0 through 10{
+    .panel-#{$panel-num}{
+        .title-block{
+        @include panel-color($panel-num);
+    }
+    } 
+}

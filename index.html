@@ -4,147 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="styles/styles.css">
     <title>James MacDonald Project 3 - jQuery Web Application</title>
 </head>
 <body>
-    <ul id="" class="accordion">
-        <li class="panel panel-0">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                Test
-            </div>
-        </li>
-        <li class="panel panel-1">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-2">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-3">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-4">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-5">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-6">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-7">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-8">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-9">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-        <li class="panel panel-10">
-            <div class="title-block"></div>
-            <div class="panel-content">
-                <img>
-                <h3></h3>
-            </div>
-        </li>
-    </ul>
+    <div class="wrap" id="wrap">
+        
+        <header></header>
+        
+        <div class="search-form" name="search-form">
+            <input type="text" class="animal-search" name="animal-search">
+            <button class="animal-search-button" name="animal-search-button"></button>
+        </div>
+
+        <section class="splash">
+            
+        </section>
+        <ul id="accordian" class="accordion">
+            <li class="panel panel-0">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    Test
+                    
+                </div>
+            </li>
+            <li class="panel panel-1">
+                <div class="title-block">
+                    <h6 class="period-title"></h6>
+                </div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-2">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-3">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-4">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-5">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-6">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-7">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-8">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-9">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+            <li class="panel panel-10">
+                <div class="title-block"></div>
+                <div class="panel-content">
+                    <img>
+                    <h3></h3>
+                </div>
+            </li>
+        </ul>
+    </div>
     <style>
-        * { 
-            -moz-box-sizing: border-box; 
-            -webkit-box-sizing: border-box; 
-            box-sizing: border-box; 
-        }
-        .panel-content h3 img{
-            width: 50px;
-            height: 50px;
-        }
-        .panel.panel.active{
-            height:100%;
-        }
-        .panel.active .panel-content{
-            height: 100%;
-        }
-        body{
-            margin: 0;
-        }
-        .panel-content img{
-            width: 100px;
-            height: 100px;
-        }
-    .accordion {
-	list-style:none;
-	margin:30px 0;
-	padding:0;
-	height: auto;
-	width:100%;
-	margin:0 0 0 0px;
-	overflow:hidden;
-    display:flex
-}
-.accordion .panel {
-	display:flex;
-	height:270px;
-	width:25px;
-	overflow:hidden;
-	color:#666666;
-	text-decoration:none;
-	font-size:16px;
-	line-height:1.5em;
-}
-.accordion .panel.active {
-	width:calc(100% - 250px);
-}
-.panel-content {
-	padding:15px;
-	height:240px;
-	width:100%;
-}
-.title-block {
-	flex: 0 0 25px;
-	height:270px;
-	background-color:#446799;
-	cursor:pointer;
-}
-.last {
-	border:none;
-}
+        
+    
     </style>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="js/index.js"></script>
