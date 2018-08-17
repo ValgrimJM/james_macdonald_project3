@@ -262,7 +262,7 @@ header {
       flex: 1 0 5%; }
 
 .splash {
-  height: 84.3vh;
+  height: 84vh;
   padding-top: 40px;
   position: relative;
   background-image: url(../assets/photo-1519409369806-8e923ea66184.jpg);
@@ -288,6 +288,7 @@ header {
   display: -ms-flexbox;
   display: flex;
   height: 100px;
+  height: 16vh;
   width: 25px;
   overflow: hidden;
   color: #666666;
@@ -328,7 +329,8 @@ header {
   border: none; }
 
 .panel.panel.active {
-  height: 100px; }
+  height: 100px;
+  height: 16vh; }
 
 .panel.active .panel-content {
   height: 100%; }
@@ -346,4 +348,8 @@ header {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   color: white;
+  margin: 0; }
+
+h3.loading {
+  height: 26px;
   margin: 0; }

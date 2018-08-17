@@ -7,7 +7,7 @@ paleo.time_periods = [
         name: "Cambrian",
         abr: "Cm",
         id: 22,
-        animals: 186, 
+        animals: 185, 
     }, 
     {
         name: "Devonian",
@@ -56,7 +56,7 @@ paleo.time_periods = [
         name: "Neogene",
         abr: "Ng",
         id: 25,
-        animals: 1244
+        animals: 1241
     },
     {
         name: "Quaternary",
@@ -70,12 +70,23 @@ paleo.time_periods = [
 paleo.base_names =["","Chordata,Radiodonta,Asaphida", "Chordata,Radiodonta,Asaphida", "Chordata", "Tetrapoda", "Tetrapoda", "Tetrapoda", "Tetrapoda", "Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea", "Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea","Perissodactyla,Artiodactyla,Aves,Embrithopoda,Proboscidea,Carnivora"]
 
 paleo.new_width = $(".accordion").width() - 250;
-paleo.activePanel = $(".accordion li.panel:first");
+paleo.active_panel = $(".accordion li.panel:first");
+paleo.accordion = $("#accordion").position().top - 50;
+paleo.last_panel = 0;
 
 paleo.wrap_scroll = () => {
-    
+
     $("#wrap").on("scroll", function(e){
         
+        console.log($("#accordion").height(), (this).scrollTop, $("#wrap")[0].scrollTop);
+        
+        if ($("#accordion").height() < (this.scrollTop + 150) && (this.scrollTop + 150) > paleo.last_panel) {
+            paleo.last_panel = $("accordion").height();
+            const panel = paleo.active_panel[0].classList[1]
+            const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
+            paleo.get_animals(panel_val);
+            paleo.last_panel = 0;
+        }
         if(this.scrollTop > 147) {
             $("#wrap").addClass("fixed-search");
         }
@@ -90,33 +101,38 @@ paleo.init = () => {
     paleo.panel_key_nav();
     paleo.window_resize();
     paleo.wrap_scroll();
+    paleo.more_animals();
     
-    
-    $(paleo.activePanel).addClass('active');
-    paleo.activePanel.focus();
+    $(paleo.active_panel).addClass('active');
+    paleo.active_panel.focus();
 }
+
 paleo.animal_panel = (panel) =>{
     
     const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
     if (panel_val > 0) {
         $(`.${panel} .panel-content`).empty();
-        for(let i = 0; i < 1; i++){
-            paleo.get_animals(panel_val, i);
-        }
+            paleo.get_animals(panel_val);
     }
-    else{
-        paleo.clear_inactive();
-    }
+    paleo.clear_inactive();
+        
+    $(".wrap").animate({scrollTop: paleo.accordion}, 500);
+    // let accordion = document.getElementById("accordion");
+    // accordion.scrollIntoView({behavior: "smooth"});
 }
 // get animal to display
-paleo.get_animals = (panel_id, num) => {
+paleo.get_animals = (panel_id) => {
     paleo.clear_inactive();
-
-    let $loading_div = $("<div>").addClass(`animal-block loading-${num}`);
+    $(`.panel-${panel_id} .panel-content .more-animals`).remove();
+    
+    for (let i = 0; i < 12; i++) {
+    let $loading_div = $("<div>").addClass(`animal-block loading`);
     let $loading_img = $("<img>").attr("src", "assets/Wedges-3s-200px.svg");
     let $loading_dots = $("<h3>").append($("<img>").attr("src","assets/Ellipsis-1s-50px.svg"));
     $loading_div.append($loading_img, $loading_dots);
     $(`.panel-${panel_id} .panel-content`).append($loading_div);
+    }
+    $(`.panel-${panel_id} .panel-content`).append($("<h3>").addClass("loading").append($("<img>").attr("src", "assets/Ellipsis-1s-50px.svg")));
     $.ajax({
         url: "http://paleobiodb.org/data1.2/occs/taxa.json",
         format: "GET",
@@ -131,8 +147,10 @@ paleo.get_animals = (panel_id, num) => {
         }
     }).then((res) => {
         console.log(res);
+        console.log(paleo.time_periods[panel_id].animals);
         
-        for(let i = 0; i < 11; i++){
+        $(`.panel-${panel_id} .panel-content .loading`).remove();
+        for(let i = 0; i < 12; i++){
             let record_num = Math.floor(Math.random() * paleo.time_periods[panel_id].animals)
             res.records[record_num]
 
@@ -143,39 +161,49 @@ paleo.get_animals = (panel_id, num) => {
             $animal_block.append($animal_img, $animal_name);
             $(`.panel-${panel_id} .panel-content`).append($animal_block);
         }
-        
+        let $animals_but = $("<button>").addClass(`more-animals ${panel_id}`).text("More Animals");
+        $(`.panel-${panel_id} .panel-content`).append($animals_but);
 
-        $(`.panel-${panel_id} .panel-content .loading-${num}`).remove();
-        let img_id = res.records[0].img.substring(res.records[0].img.lastIndexOf(":") + 1);
-        let $animal_block = $("<div>").addClass("animal-block");
-        let $animal_img = $("<img>").attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
-        let $animal_name = $("<h3>").append(res.records[0].nam);
-        $animal_block.append($animal_img, $animal_name);
-        $(`.panel-${panel_id} .panel-content`).append($animal_block);
+        
+        // let img_id = res.records[0].img.substring(res.records[0].img.lastIndexOf(":") + 1);
+        // let $animal_block = $("<div>").addClass("animal-block");
+        // let $animal_img = $("<img>").attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
+        // let $animal_name = $("<h3>").append(res.records[0].nam);
+        // $animal_block.append($animal_img, $animal_name);
+        // $(`.panel-${panel_id} .panel-content`).append($animal_block);
         
     });
     
 }
+// button click for backup
+paleo.more_animals = () => {
+    $(".panel-content").on("click",".more-animals", function(){
+        let panel = $(".more-animals").attr("class").split(" ")[1];
+        console.log(panel);
+        
+        paleo.get_animals(panel);
+    })
+}
 // key press event handler
-paleo.panel_key_nav = function(){
+paleo.panel_key_nav = () => {
 
     $(document).keydown(function (e) {
 
-        if (e.keyCode == 39 && paleo.activePanel[0].classList[1] != "panel-10") {
+        if (e.keyCode == 39 && paleo.active_panel[0].classList[1] != "panel-10") {
             
-            paleo.move_panel(paleo.activePanel.next()[0]);
+            paleo.move_panel(paleo.active_panel.next()[0]);
         }
-        if (e.keyCode == 37 && paleo.activePanel[0].classList[1] != "panel-0") {
-            paleo.move_panel(paleo.activePanel.prev()[0]);
+        if (e.keyCode == 37 && paleo.active_panel[0].classList[1] != "panel-0") {
+            paleo.move_panel(paleo.active_panel.prev()[0]);
         }
     })
 }
 // click event handler for panel
 paleo.panel_click = function(){
-    $(".accordion").on('click', '.panel', function () {
+    $(".accordion").on("click", ".panel", function () {
         if (!$(this).is('.active')) {
             // fade out old content
-            $(paleo.activePanel).find(".panel-content").empty();
+            $(paleo.active_panel).find(".panel-content").empty();
             paleo.move_panel(this);
         };
     });
@@ -185,15 +213,15 @@ paleo.move_panel = (next_item) => {
 
     // set height
     if (next_item.classList[1] == "panel-0") {
-        $(".panel").animate({ height: "100px" }, 300);
+        $(".panel").animate({ height: "16vh" }, 300);
     }
     else {
         // $(".panel").animate({ height: "100vh" }, 300);
-        $(".panel").css("height", "auto");
+        $(".panel").css("height", "100vh");
     }
 
     // shrink old panel, grow new panel
-    $(paleo.activePanel).animate({ width: "25px" }, 300);
+    $(paleo.active_panel).animate({ width: "25px" }, 300);
     $(next_item).animate({ width: paleo.new_width }, 300);
 
     
@@ -201,9 +229,9 @@ paleo.move_panel = (next_item) => {
     // change new panel to active panel
     $('.accordion .panel').removeClass('active');
     $(next_item).addClass('active');
-    paleo.activePanel = $(".accordion li.panel.active");
-    // $("#accordion").scrollIntoView();
-    paleo.animal_panel(paleo.activePanel[0].classList[1]);
+    paleo.active_panel = $(".accordion li.panel.active");
+    paleo.animal_panel(paleo.active_panel[0].classList[1]);
+    $(".panel").css("height", "auto");
     
 }
 // make all panels the hight of the tallest element

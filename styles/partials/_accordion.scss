@@ -12,7 +12,8 @@
 }
 .accordion .panel {
 	display:flex;
-	height:100px;
+    height:100px;
+    height: 16vh;
 	width:25px;
 	overflow:hidden;
 	color:#666666;
@@ -49,7 +50,8 @@
 }
 
 .panel.panel.active{
-    height:100px;
+    height: 100px;
+    height: 16vh;
 }
 .panel.active .panel-content{
     height: 100%;
@@ -63,5 +65,9 @@
     writing-mode: vertical-rl;
     text-orientation: mixed;
     color: white;
+    margin: 0;
+}
+h3.loading{
+    height: 26px;
     margin: 0;
 }
