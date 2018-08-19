@@ -229,9 +229,13 @@ header {
     z-index: 1; }
 
 .search-form {
+  width: 75%;
+  margin: 0 auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
   position: absolute;
   top: 155px;
   left: 20px;
@@ -353,3 +357,28 @@ header {
 h3.loading {
   height: 26px;
   margin: 0; }
+
+@media (max-width: 800px) {
+  .animal-block {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%; } }
+
+@media (max-width: 640px) {
+  .search-form .animal-search {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%; }
+  .search-form .animal-search-button {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    height: 26px; }
+  .title-block {
+    display: none; }
+  .accordion .panel {
+    visibility: hidden;
+    width: 0px; }
+  .accordion .panel.active {
+    visibility: visible;
+    width: 100%; } }

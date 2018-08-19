@@ -71,21 +71,30 @@ paleo.base_names =["","Chordata,Radiodonta,Asaphida", "Chordata,Radiodonta,Asaph
 
 paleo.new_width = $(".accordion").width() - 250;
 paleo.active_panel = $(".accordion li.panel:first");
-paleo.accordion = $("#accordion").position().top - 50;
+paleo.accordion = $(".accordion").position().top - 50;
 paleo.last_panel = 0;
 
+paleo.flickity_gallery = () => {
+    $(".carousel").flickity({
+        cellAlign: "left",
+        contain: true,
+        wrapAround: true,
+        autoPlay: 6000,
+        pageDots: false,
+        pauseAutoPlayOnHover: false
+    })
+}
+//Scrolling Events
 paleo.wrap_scroll = () => {
-
-    $("#wrap").on("scroll", function(e){
-        
-        console.log($("#accordion").height(), (this).scrollTop, $("#wrap")[0].scrollTop);
-        
-        if ($("#accordion").height() < (this.scrollTop + 150) && (this.scrollTop + 150) > paleo.last_panel) {
-            paleo.last_panel = $("accordion").height();
-            const panel = paleo.active_panel[0].classList[1]
-            const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
-            paleo.get_animals(panel_val);
-            paleo.last_panel = 0;
+    $("#wrap").on("scroll", function(){
+        if (paleo.active_panel[0].classList[1] != "panel-0"){
+            if ($(".accordion").height() < (this.scrollTop + 150) && (this.scrollTop + 150) > paleo.last_panel) {
+                paleo.last_panel = $("accordion").height();
+                const panel = paleo.active_panel[0].classList[1]
+                const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
+                paleo.get_animals(panel_val);
+                paleo.last_panel = 0;
+            }
         }
         if(this.scrollTop > 147) {
             $("#wrap").addClass("fixed-search");
@@ -101,36 +110,39 @@ paleo.init = () => {
     paleo.panel_key_nav();
     paleo.window_resize();
     paleo.wrap_scroll();
-    paleo.more_animals();
+    paleo.animal_search();
+    paleo.flickity_gallery();
+    paleo.mobile_buttons();
     
     $(paleo.active_panel).addClass('active');
     paleo.active_panel.focus();
 }
 
 paleo.animal_panel = (panel) =>{
-    
     const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
+    console.log(panel_val);
+    
     if (panel_val > 0) {
+        console.log(panel_val);
         $(`.${panel} .panel-content`).empty();
             paleo.get_animals(panel_val);
     }
     paleo.clear_inactive();
         
-    $(".wrap").animate({scrollTop: paleo.accordion}, 500);
-    // let accordion = document.getElementById("accordion");
-    // accordion.scrollIntoView({behavior: "smooth"});
+    $(".wrap").animate({scrollTop: paleo.accordion}, 700);
 }
 // get animal to display
 paleo.get_animals = (panel_id) => {
     paleo.clear_inactive();
     $(`.panel-${panel_id} .panel-content .more-animals`).remove();
+    console.log('test');
     
     for (let i = 0; i < 12; i++) {
-    let $loading_div = $("<div>").addClass(`animal-block loading`);
-    let $loading_img = $("<img>").attr("src", "assets/Wedges-3s-200px.svg");
-    let $loading_dots = $("<h3>").append($("<img>").attr("src","assets/Ellipsis-1s-50px.svg"));
-    $loading_div.append($loading_img, $loading_dots);
-    $(`.panel-${panel_id} .panel-content`).append($loading_div);
+        let $loading_div = $("<div>").addClass(`animal-block loading`);
+        let $loading_img = $("<img>").attr("src", "assets/Wedges-3s-200px.svg");
+        let $loading_dots = $("<h3>").append($("<img>").attr("src","assets/Ellipsis-1s-50px.svg"));
+        $loading_div.append($loading_img, $loading_dots);
+        $(`.panel-${panel_id} .panel-content`).append($loading_div);
     }
     $(`.panel-${panel_id} .panel-content`).append($("<h3>").addClass("loading").append($("<img>").attr("src", "assets/Ellipsis-1s-50px.svg")));
     $.ajax({
@@ -155,14 +167,14 @@ paleo.get_animals = (panel_id) => {
             res.records[record_num]
 
             let img_id = res.records[record_num].img.substring(res.records[record_num].img.lastIndexOf(":") + 1);
-            let $animal_block = $("<div>").addClass("animal-block");
+            let $animal_block = $("<div>", {}).addClass("animal-block").bind("click", function(){
+                window.location = `animal-info.html?name=${res.records[record_num].nam}`;
+            });
             let $animal_img = $("<img>").attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
             let $animal_name = $("<h3>").append(res.records[record_num].nam);
             $animal_block.append($animal_img, $animal_name);
             $(`.panel-${panel_id} .panel-content`).append($animal_block);
         }
-        let $animals_but = $("<button>").addClass(`more-animals ${panel_id}`).text("More Animals");
-        $(`.panel-${panel_id} .panel-content`).append($animals_but);
 
         
         // let img_id = res.records[0].img.substring(res.records[0].img.lastIndexOf(":") + 1);
@@ -174,15 +186,6 @@ paleo.get_animals = (panel_id) => {
         
     });
     
-}
-// button click for backup
-paleo.more_animals = () => {
-    $(".panel-content").on("click",".more-animals", function(){
-        let panel = $(".more-animals").attr("class").split(" ")[1];
-        console.log(panel);
-        
-        paleo.get_animals(panel);
-    })
 }
 // key press event handler
 paleo.panel_key_nav = () => {
@@ -204,7 +207,26 @@ paleo.panel_click = function(){
         if (!$(this).is('.active')) {
             // fade out old content
             $(paleo.active_panel).find(".panel-content").empty();
+            console.log(this);
+            
             paleo.move_panel(this);
+        };
+    });
+}
+// click event mobile buttons
+paleo.mobile_buttons = () => {
+    $(".carousel").on("staticClick.flickity", function (event, pointer, cellElement, cellIndex) {
+        console.log('test');
+        console.log(cellElement.classList[1]);
+
+        if (!$(`.accordion.panel.${cellElement.classList[1]}`).is('.active')) {
+            // fade out old content
+            console.log('test');
+            
+            $(paleo.active_panel).find(".panel-content").empty();
+            console.log($(`.accordion .${cellElement.classList[1]}`)[0]);
+            
+            paleo.move_panel($(`.accordion .${cellElement.classList[1]}`)[0]);
         };
     });
 }
@@ -221,8 +243,15 @@ paleo.move_panel = (next_item) => {
     }
 
     // shrink old panel, grow new panel
-    $(paleo.active_panel).animate({ width: "25px" }, 300);
-    $(next_item).animate({ width: paleo.new_width }, 300);
+    if(window.matchMedia("(max-width: 640px")){
+        $(paleo.active_panel).animate({ width: "0px" }, 300);
+        $(next_item).animate({ width: "100vw" }, 300);
+    }
+    else{
+        $(paleo.active_panel).animate({ width: "25px" }, 300);
+        $(next_item).animate({ width: paleo.new_width }, 300);
+    }
+    
 
     
 
@@ -234,30 +263,47 @@ paleo.move_panel = (next_item) => {
     $(".panel").css("height", "auto");
     
 }
-// make all panels the hight of the tallest element
-paleo.adjust_height = () => {
-    console.log('get height');
-    
-    let element_heights = $(".panel").map( function (){
-        return $(this).height();
-    }).get();
-    let max_height = Math.max.apply(null, element_heights);
-    $(".panel").animate({ height: max_height}, 300);
-    console.log(max_height);
-    
-}
 //when the window is resized
 paleo.window_resize = () => {
     $(window).on("resize", function () {
-        // update all variables that you need
-        paleo.new_width = $(".accordion").width() - 250;
-        $(".panel.active").animate({ width: paleo.new_width }, 1);
+        if (window.matchMedia("(max-width: 640px")) {
+            paleo.new_width = $(".accordion").width()
+        }
+        else{
+            // update all variables that you need
+            paleo.new_width = $(".accordion").width() - 250;
+            $(".panel.active").animate({ width: paleo.new_width }, 1);
+        }
+        
     });
 }
 // fade out old content
 paleo.clear_inactive = () => {
     $(":not(.active)>.panel-content").empty();
 }
+
+paleo.animal_search = () =>
+    $(".animal-search-button").on("click", function () {
+        console.log('test');
+        $(".error-message").remove();
+        let search_term = $(".animal-search").val();
+        $.ajax({
+            url: "http://paleobiodb.org/data1.2/taxa/single.json",
+            method: "GET",
+            dataType: "json",
+            data: {
+                taxon_name: search_term,
+                show: "full"
+            }
+        }).fail(() => {
+            let $error_message = $("<p>").addClass("error-message").text("We cant find an animal with that name.  Please be more specific or look through the panels below.");
+            $(".search-form").append($error_message);
+        }).then((res) => {
+                console.log(res);
+            window.location = `animal-info.html?name=${res.records[0].nam}`
+            
+        });
+    });
 
 // **********On page load**********
 $(function () {  

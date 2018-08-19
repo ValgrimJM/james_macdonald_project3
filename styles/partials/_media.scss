@@ -1,0 +1,28 @@
+@media (max-width: 800px){
+    .animal-block{
+        flex: 0 0 50%;
+    }
+}
+@media(max-width: 640px){
+    .search-form{
+        .animal-search{
+            flex: 0 0 100%;
+        }
+        .animal-search-button{
+            flex: 0 0 100%;
+            height: 26px;
+    }
+    }
+    
+    .title-block,{
+        display: none;
+    }
+    .accordion .panel{
+        visibility: hidden;
+        width: 0px;
+    }
+    .accordion .panel.active{
+        visibility: visible;
+        width: 100%;
+    }
+}
