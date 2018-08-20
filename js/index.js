@@ -172,7 +172,7 @@ paleo.get_animals = (panel_id) => {
             let $animal_block = $("<div>", {}).addClass("animal-block").bind("click", function(){
                 window.location = `animal-info.html?name=${res.records[record_num].nam}`;
             });
-            let $animal_img = $("<img>").attr("src", `https://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
+            let $animal_img = $("<img>").attr("src", `https://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`).attr("alt", "Animal Thumbnail");
             let $animal_name = $("<h3>").append(res.records[record_num].nam);
             $animal_block.append($animal_img, $animal_name);
             $(`.panel-${panel_id} .panel-content`).append($animal_block);

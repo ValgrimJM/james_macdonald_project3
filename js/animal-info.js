@@ -70,7 +70,7 @@ animal.get_info = (name) => {
                 $wiki_link = $("<a>").attr("href", "https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation").text("here");
                 $no_results = $("<p>").addClass("no-results").text("Sorry, this animal does not have a wikipedia article, check back later or ask for it to made ").append($wiki_link);
                 $(".animal-desc").append($no_results);
-                $(".gallery").flickity("append", $("<div>").addClass("carousel-cell").append($("<img>").attr("src", "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg")));
+                $(".gallery").flickity("append", $("<div>").addClass("carousel-cell").append($("<img>").attr("src", "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg").attr("alt", "No Image Available")));
             }
             else{
 
@@ -103,7 +103,7 @@ animal.get_info = (name) => {
                         }).then((res) =>{
                             console.log(res);
                             let img_url = Object.values(res.query.pages)[0].imageinfo[0];
-                            let $animal_img = $("<img>").attr("src", img_url.url);
+                            let $animal_img = $("<img>").attr("src", img_url.url).attr("alt", img_name);
                             let $img_div = $("<div>").addClass("carousel-cell").append($animal_img);
                             $(".gallery").flickity("append", $img_div);
                             // $(".gallery").append($img_div);
@@ -112,7 +112,7 @@ animal.get_info = (name) => {
                     });
                 }
                 else{
-                    $(".gallery").flickity("append", $("<div>").addClass("carousel-cell").append($("<img>").attr("src", "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg")));
+                    $(".gallery").flickity("append", $("<div>").addClass("carousel-cell").append($("<img>").attr("src", "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg").attr("alt", "No Image Available")));
                 }
                 console.log(img_animal);
             }
