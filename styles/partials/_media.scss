@@ -36,6 +36,17 @@
     }
 }
 @media(max-width: 480px){
+    .search-form{
+        flex-wrap: nowrap;
+        .animal-search{
+            text-indent: 5px;
+        }
+        .to-top{
+            height: 40px;
+            font-size: 11px;
+        }
+    }
+
     .flickity-page-dots{
         display: none;
     }

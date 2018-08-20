@@ -160,8 +160,14 @@ paleo.animal_panel = (panel) =>{
             <p>Splash art is by <a href="https://unsplash.com/@justynwarner">Justyn Warner</a></p>`)
     }
     paleo.clear_inactive();
-        
-    $(".wrap").animate({scrollTop: paleo.accordion}, 700);
+    
+    if($(".accordion")[0].clientWidth < 640){
+        $(".wrap").animate({ scrollTop: paleo.accordion - 10 }, 700);
+    }
+    else{
+        $(".wrap").animate({ scrollTop: paleo.accordion }, 700);
+    }
+    
 }
 // get animal to display
 paleo.get_animals = (panel_id) => {
