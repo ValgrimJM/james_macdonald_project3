@@ -9,6 +9,12 @@ animal.flickity_gallery = () => {
     })
 }
 
+animal.go_home = () => {
+    $(".return-button").on("click", function() {
+        window.location = "index.html";
+    });
+}
+
 animal.get_param = () => {
 
     let queryString = window.location.href.split("?")[1];
@@ -52,7 +58,8 @@ animal.get_info = (name) => {
             data: {
                 titles: animal.gnl,
                 prop: "extracts|images",
-                exintro: true
+                exintro: true,
+                imlimit: 30
             }
         
         }).then((res) => {
@@ -61,9 +68,8 @@ animal.get_info = (name) => {
             let img_list = [];
             if(animal_info.hasOwnProperty("missing") || animal_info.extract == ""){
                 $wiki_link = $("<a>").attr("href", "https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation").text("here");
-                $no_results = $("<p>").text("Sorry, this animal does not have a wikipedia article, check back later or ask for it to made ").append($wiki_link);
-                $wiki_link = $("<a>").attr("href", "https://en.wikipedia.org/wiki/Wikipedia:Articles_for_creation").text("here");
-                $(".animal-desc").append($no_results, $wiki_link);
+                $no_results = $("<p>").addClass("no-results").text("Sorry, this animal does not have a wikipedia article, check back later or ask for it to made ").append($wiki_link);
+                $(".animal-desc").append($no_results);
                 $(".gallery").flickity("append", $("<div>").addClass("carousel-cell").append($("<img>").attr("src", "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg")));
             }
             else{
@@ -75,7 +81,7 @@ animal.get_info = (name) => {
                 // let img_list = Object.values(animal_info.images);
                 console.log(img_list);
                 let img_animal = img_list.filter((img) => {
-                    if (img.includes(animal.nam) || img.includes(animal.nm2) || img.includes("NT") || img.includes("DB") || img.includes("BW") )
+                    if (img.includes(animal.nam) || img.includes(animal.nm2) || img.includes("Rjpalmer") )
                     {
                         return true
                     }
@@ -118,10 +124,12 @@ animal.get_info = (name) => {
 }
 animal.init = () => {
     animal.get_param();
+    animal.go_home();
+    animal.flickity_gallery();
 }
 
 // **********On page load**********
 $(function () {
     animal.init();
-    animal.flickity_gallery();
+    
 });

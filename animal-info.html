@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="styles/styles.css">
     <title>James MacDonald Project 3 - jQuery Web Application</title>
 </head>
 <body>
     <div class="wrap">
-
+        <button class="return-button">
+            <i class="far fa-arrow-alt-circle-left"></i> Return</button>
         <div class="gallery carousel">
             
         </div>
@@ -20,42 +24,7 @@
 
         </section>
     </div>
-    <style>
-        .gallery{
-            height: 250px;
-            width: 250px;
-        }
-        .carousel-cell {
-  width: 100%;
-  height: 250px;
-  margin-right: 10px;
-  background: #888888;
-  border-radius: 5px;
-  counter-increment: carousel-cell;
-  display: flex;
-  justify-content: center;
-}
 
-/* cell number */
-.carousel-cell:before {
-  display: block;
-  text-align: center;
-  line-height: 200px;
-  font-size: 80px;
-  color: white;
-}
-        .carousel-cell img{
-            height: 250px;
-            max-width: 100%;
-            border-radius: 5px;
-        }
-    .flickity-prev-next-button.previous{
-        left: -50px;
-    }
-    .flickity-prev-next-button.next{
-        right: -50px;
-    }
-    </style>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <!-- flickity -->
     <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>

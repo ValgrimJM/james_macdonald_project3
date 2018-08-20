@@ -74,6 +74,32 @@ paleo.active_panel = $(".accordion li.panel:first");
 paleo.accordion = $(".accordion").position().top - 50;
 paleo.last_panel = 0;
 
+paleo.animal_search = () =>
+    $(".animal-search-button").on("click", function () {
+        $(".error-message").remove();
+        let search_term = $(".animal-search").val();
+        $.ajax({
+            url: "http://paleobiodb.org/data1.2/taxa/single.json",
+            method: "GET",
+            dataType: "json",
+            data: {
+                taxon_name: search_term,
+                show: "full"
+            }
+        }).fail(() => {
+            let $error_message = $("<p>").addClass("error-message").text("We cant find an animal with that name.  Please be more specific or look through the panels below.");
+            $(".search-form").append($error_message);
+        }).then((res) => {
+            window.location = `animal-info.html?name=${res.records[0].nam}`
+
+        });
+    });
+paleo.to_top = () =>{
+    $(".to-top").on("click", function() {
+        $(".wrap").animate({ scrollTop: 0 }, 700);
+    });
+}
+
 paleo.flickity_gallery = () => {
     $(".carousel").flickity({
         cellAlign: "left",
@@ -113,6 +139,7 @@ paleo.init = () => {
     paleo.animal_search();
     paleo.flickity_gallery();
     paleo.mobile_buttons();
+    paleo.to_top();
     
     $(paleo.active_panel).addClass('active');
     paleo.active_panel.focus();
@@ -120,12 +147,17 @@ paleo.init = () => {
 
 paleo.animal_panel = (panel) =>{
     const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
-    console.log(panel_val);
     
     if (panel_val > 0) {
-        console.log(panel_val);
         $(`.${panel} .panel-content`).empty();
+        let panel_name = $("<h1>").text(paleo.time_periods[panel_val].name);
+        $(`.${panel} .panel-content`).append(panel_name);
             paleo.get_animals(panel_val);
+    }
+    else{
+        $(`.${panel} .panel-content`).append(
+            `<p>Thanks to the <a href="https://paleobiodb.org">PaleoDB</a> and <a href="https://www.mediawiki.org">MediaWiki</a>. </p>
+            <p>Splash art is by <a href="https://unsplash.com/@justynwarner">Justyn Warner</a></p>`)
     }
     paleo.clear_inactive();
         
@@ -135,7 +167,6 @@ paleo.animal_panel = (panel) =>{
 paleo.get_animals = (panel_id) => {
     paleo.clear_inactive();
     $(`.panel-${panel_id} .panel-content .more-animals`).remove();
-    console.log('test');
     
     for (let i = 0; i < 12; i++) {
         let $loading_div = $("<div>").addClass(`animal-block loading`);
@@ -158,8 +189,6 @@ paleo.get_animals = (panel_id) => {
 
         }
     }).then((res) => {
-        console.log(res);
-        console.log(paleo.time_periods[panel_id].animals);
         
         $(`.panel-${panel_id} .panel-content .loading`).remove();
         for(let i = 0; i < 12; i++){
@@ -207,7 +236,6 @@ paleo.panel_click = function(){
         if (!$(this).is('.active')) {
             // fade out old content
             $(paleo.active_panel).find(".panel-content").empty();
-            console.log(this);
             
             paleo.move_panel(this);
         };
@@ -216,16 +244,10 @@ paleo.panel_click = function(){
 // click event mobile buttons
 paleo.mobile_buttons = () => {
     $(".carousel").on("staticClick.flickity", function (event, pointer, cellElement, cellIndex) {
-        console.log('test');
-        console.log(cellElement.classList[1]);
 
         if (!$(`.accordion.panel.${cellElement.classList[1]}`).is('.active')) {
             // fade out old content
-            console.log('test');
-            
-            $(paleo.active_panel).find(".panel-content").empty();
-            console.log($(`.accordion .${cellElement.classList[1]}`)[0]);
-            
+            $(paleo.active_panel).find(".panel-content").empty();           
             paleo.move_panel($(`.accordion .${cellElement.classList[1]}`)[0]);
         };
     });
@@ -243,7 +265,8 @@ paleo.move_panel = (next_item) => {
     }
 
     // shrink old panel, grow new panel
-    if(window.matchMedia("(max-width: 640px")){
+    if(window.matchMedia("(max-width: 640px").matches == true){
+        
         $(paleo.active_panel).animate({ width: "0px" }, 300);
         $(next_item).animate({ width: "100vw" }, 300);
     }
@@ -266,12 +289,16 @@ paleo.move_panel = (next_item) => {
 //when the window is resized
 paleo.window_resize = () => {
     $(window).on("resize", function () {
-        if (window.matchMedia("(max-width: 640px")) {
+        if (window.matchMedia("(max-width: 640px").matches == true) {
+            
+            !$(`.accordion .panel:not(.active)`).css("width", "0px");
+            !$(`.accordion .panel.active`).css("width", "100vw");
             paleo.new_width = $(".accordion").width()
         }
         else{
             // update all variables that you need
             paleo.new_width = $(".accordion").width() - 250;
+            !$(`.accordion .panel:not(.active)`).css("width", "25px");
             $(".panel.active").animate({ width: paleo.new_width }, 1);
         }
         
@@ -282,28 +309,6 @@ paleo.clear_inactive = () => {
     $(":not(.active)>.panel-content").empty();
 }
 
-paleo.animal_search = () =>
-    $(".animal-search-button").on("click", function () {
-        console.log('test');
-        $(".error-message").remove();
-        let search_term = $(".animal-search").val();
-        $.ajax({
-            url: "http://paleobiodb.org/data1.2/taxa/single.json",
-            method: "GET",
-            dataType: "json",
-            data: {
-                taxon_name: search_term,
-                show: "full"
-            }
-        }).fail(() => {
-            let $error_message = $("<p>").addClass("error-message").text("We cant find an animal with that name.  Please be more specific or look through the panels below.");
-            $(".search-form").append($error_message);
-        }).then((res) => {
-                console.log(res);
-            window.location = `animal-info.html?name=${res.records[0].nam}`
-            
-        });
-    });
 
 // **********On page load**********
 $(function () {  
