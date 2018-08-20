@@ -74,77 +74,6 @@ paleo.active_panel = $(".accordion li.panel:first");
 paleo.accordion = $(".accordion").position().top - 50;
 paleo.last_panel = 0;
 
-paleo.animal_search = () =>
-    $(".animal-search-button").on("click", function () {
-        $(".error-message").remove();
-        let search_term = $(".animal-search").val();
-        $.ajax({
-            url: "https://paleobiodb.org/data1.2/taxa/single.json",
-            method: "GET",
-            dataType: "json",
-            data: {
-                taxon_name: search_term,
-                show: "full"
-            }
-        }).fail(() => {
-            let $error_message = $("<p>").addClass("error-message").text("We cant find an animal with that name.  Please be more specific or look through the panels below.");
-            $(".search-form").append($error_message);
-        }).then((res) => {
-            window.location = `animal-info.html?name=${res.records[0].nam}`
-
-        });
-    });
-paleo.to_top = () =>{
-    $(".to-top").on("click", function() {
-        $(".wrap").animate({ scrollTop: 0 }, 700);
-    });
-}
-
-paleo.flickity_gallery = () => {
-    $(".carousel").flickity({
-        cellAlign: "left",
-        contain: true,
-        wrapAround: true,
-        autoPlay: 6000,
-        pageDots: false,
-        pauseAutoPlayOnHover: false
-    })
-}
-//Scrolling Events
-paleo.wrap_scroll = () => {
-    $("#wrap").on("scroll", function(){
-        if (paleo.active_panel[0].classList[1] != "panel-0"){
-            if ($(".accordion").height() < (this.scrollTop + 150) && (this.scrollTop + 150) > paleo.last_panel) {
-                paleo.last_panel = $("accordion").height();
-                const panel = paleo.active_panel[0].classList[1]
-                const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
-                paleo.get_animals(panel_val);
-                paleo.last_panel = 0;
-            }
-        }
-        if(this.scrollTop > 147) {
-            $("#wrap").addClass("fixed-search");
-        }
-        else{
-            $("#wrap").removeClass("fixed-search");
-        }
-    });
-}
-// initialization
-paleo.init = () => {
-    paleo.panel_click();
-    paleo.panel_key_nav();
-    paleo.window_resize();
-    paleo.wrap_scroll();
-    paleo.animal_search();
-    paleo.flickity_gallery();
-    paleo.mobile_buttons();
-    paleo.to_top();
-    
-    $(paleo.active_panel).addClass('active');
-    paleo.active_panel.focus();
-}
-
 paleo.animal_panel = (panel) =>{
     const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
     
@@ -169,6 +98,44 @@ paleo.animal_panel = (panel) =>{
     }
     
 }
+
+paleo.animal_search = () =>
+    $(".animal-search-button").on("click", function () {
+        $(".error-message").remove();
+        let search_term = $(".animal-search").val();
+        $.ajax({
+            url: "https://paleobiodb.org/data1.2/taxa/single.json",
+            method: "GET",
+            dataType: "json",
+            data: {
+                taxon_name: search_term,
+                show: "full"
+            }
+        }).fail(() => {
+            let $error_message = $("<p>").addClass("error-message").text("We cant find an animal with that name.  Please be more specific or look through the panels below.");
+            $(".search-form").append($error_message);
+        }).then((res) => {
+            window.location = `animal-info.html?name=${res.records[0].nam}`
+
+        });
+    });
+
+// fade out old content
+paleo.clear_inactive = () => {
+    $(":not(.active)>.panel-content").empty();
+}
+
+paleo.flickity_gallery = () => {
+    $(".carousel").flickity({
+        cellAlign: "left",
+        contain: true,
+        wrapAround: true,
+        autoPlay: 6000,
+        pageDots: false,
+        pauseAutoPlayOnHover: false
+    })
+}
+
 // get animal to display
 paleo.get_animals = (panel_id) => {
     paleo.clear_inactive();
@@ -209,43 +176,9 @@ paleo.get_animals = (panel_id) => {
             let $animal_name = $("<h3>").append(res.records[record_num].nam);
             $animal_block.append($animal_img, $animal_name);
             $(`.panel-${panel_id} .panel-content`).append($animal_block);
-        }
-
-        
-        // let img_id = res.records[0].img.substring(res.records[0].img.lastIndexOf(":") + 1);
-        // let $animal_block = $("<div>").addClass("animal-block");
-        // let $animal_img = $("<img>").attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
-        // let $animal_name = $("<h3>").append(res.records[0].nam);
-        // $animal_block.append($animal_img, $animal_name);
-        // $(`.panel-${panel_id} .panel-content`).append($animal_block);
-        
+        } 
     });
     
-}
-// key press event handler
-paleo.panel_key_nav = () => {
-
-    $(document).keydown(function (e) {
-
-        if (e.keyCode == 39 && paleo.active_panel[0].classList[1] != "panel-10") {
-            
-            paleo.move_panel(paleo.active_panel.next()[0]);
-        }
-        if (e.keyCode == 37 && paleo.active_panel[0].classList[1] != "panel-0") {
-            paleo.move_panel(paleo.active_panel.prev()[0]);
-        }
-    })
-}
-// click event handler for panel
-paleo.panel_click = function(){
-    $(".accordion").on("click", ".panel", function () {
-        if (!$(this).is('.active')) {
-            // fade out old content
-            $(paleo.active_panel).find(".panel-content").empty();
-            
-            paleo.move_panel(this);
-        };
-    });
 }
 // click event mobile buttons
 paleo.mobile_buttons = () => {
@@ -280,10 +213,6 @@ paleo.move_panel = (next_item) => {
         $(paleo.active_panel).animate({ width: "25px" }, 300);
         $(next_item).animate({ width: paleo.new_width }, 300);
     }
-    
-
-    
-
     // change new panel to active panel
     $('.accordion .panel').removeClass('active');
     $(next_item).addClass('active');
@@ -292,6 +221,40 @@ paleo.move_panel = (next_item) => {
     $(".panel").css("height", "auto");
     
 }
+// click event handler for panel
+paleo.panel_click = function () {
+    $(".accordion").on("click", ".panel", function () {
+        if (!$(this).is('.active')) {
+            // fade out old content
+            $(paleo.active_panel).find(".panel-content").empty();
+
+            paleo.move_panel(this);
+        };
+    });
+}
+
+// key press event handler
+paleo.panel_key_nav = () => {
+
+    $(document).keydown(function (e) {
+
+        if (e.keyCode == 39 && paleo.active_panel[0].classList[1] != "panel-10") {
+
+            paleo.move_panel(paleo.active_panel.next()[0]);
+        }
+        if (e.keyCode == 37 && paleo.active_panel[0].classList[1] != "panel-0") {
+            paleo.move_panel(paleo.active_panel.prev()[0]);
+        }
+    })
+}
+
+//go back to top
+paleo.to_top = () => {
+    $(".to-top").on("click", function () {
+        $(".wrap").animate({ scrollTop: 0 }, 700);
+    });
+}
+
 //when the window is resized
 paleo.window_resize = () => {
     $(window).on("resize", function () {
@@ -310,11 +273,43 @@ paleo.window_resize = () => {
         
     });
 }
-// fade out old content
-paleo.clear_inactive = () => {
-    $(":not(.active)>.panel-content").empty();
+
+//Scrolling Events
+paleo.wrap_scroll = () => {
+    $("#wrap").on("scroll", function () {
+        if (paleo.active_panel[0].classList[1] != "panel-0") {
+            if ($(".accordion").height() < (this.scrollTop + 150) && (this.scrollTop + 150) > paleo.last_panel) {
+                paleo.last_panel = $("accordion").height();
+                const panel = paleo.active_panel[0].classList[1]
+                const panel_val = panel.substring(panel.lastIndexOf("-") + 1);
+                paleo.get_animals(panel_val);
+                paleo.last_panel = 0;
+            }
+        }
+        if (this.scrollTop > 147) {
+            $("#wrap").addClass("fixed-search");
+        }
+        else {
+            $("#wrap").removeClass("fixed-search");
+        }
+    });
 }
 
+
+// initialization
+paleo.init = () => {
+    paleo.panel_click();
+    paleo.panel_key_nav();
+    paleo.window_resize();
+    paleo.wrap_scroll();
+    paleo.animal_search();
+    paleo.flickity_gallery();
+    paleo.mobile_buttons();
+    paleo.to_top();
+
+    $(paleo.active_panel).addClass('active');
+    paleo.active_panel.focus();
+}
 
 // **********On page load**********
 $(function () {  
