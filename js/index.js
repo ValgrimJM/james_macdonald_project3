@@ -79,7 +79,7 @@ paleo.animal_search = () =>
         $(".error-message").remove();
         let search_term = $(".animal-search").val();
         $.ajax({
-            url: "http://paleobiodb.org/data1.2/taxa/single.json",
+            url: "https://paleobiodb.org/data1.2/taxa/single.json",
             method: "GET",
             dataType: "json",
             data: {
@@ -177,7 +177,7 @@ paleo.get_animals = (panel_id) => {
     }
     $(`.panel-${panel_id} .panel-content`).append($("<h3>").addClass("loading").append($("<img>").attr("src", "assets/Ellipsis-1s-50px.svg")));
     $.ajax({
-        url: "http://paleobiodb.org/data1.2/occs/taxa.json",
+        url: "https://paleobiodb.org/data1.2/occs/taxa.json",
         format: "GET",
         dataType: "json",
         data: {
@@ -199,7 +199,7 @@ paleo.get_animals = (panel_id) => {
             let $animal_block = $("<div>", {}).addClass("animal-block").bind("click", function(){
                 window.location = `animal-info.html?name=${res.records[record_num].nam}`;
             });
-            let $animal_img = $("<img>").attr("src", `http://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
+            let $animal_img = $("<img>").attr("src", `https://paleobiodb.org/data1.2/taxa/thumb.png?id=${img_id}`);
             let $animal_name = $("<h3>").append(res.records[record_num].nam);
             $animal_block.append($animal_img, $animal_name);
             $(`.panel-${panel_id} .panel-content`).append($animal_block);

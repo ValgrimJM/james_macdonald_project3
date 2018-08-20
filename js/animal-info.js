@@ -27,7 +27,7 @@ animal.get_param = () => {
 animal.get_info = (name) => {
 
     $.ajax({
-        url: "http://paleobiodb.org/data1.2/taxa/single.json",
+        url: "https://paleobiodb.org/data1.2/taxa/single.json",
         method: "GET",
         dataType: "json",
         data: {
@@ -52,7 +52,7 @@ animal.get_info = (name) => {
         
 
         $.ajax({
-            url: "http://en.wikipedia.org/w/api.php?action=query&format=json",
+            url: "https://en.wikipedia.org/w/api.php?action=query&format=json",
             method: "GET",
             dataType: "jsonp",
             data: {
@@ -92,7 +92,7 @@ animal.get_info = (name) => {
                 if(img_animal.length > 0 ){
                     img_animal.forEach((img_name) => {
                         $.ajax({
-                            url: "http://en.wikipedia.org/w/api.php?action=query&format=json",
+                            url: "https://en.wikipedia.org/w/api.php?action=query&format=json",
                             method: "GET",
                             dataType: "jsonp",
                             data:{
